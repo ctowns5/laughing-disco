@@ -2,43 +2,12 @@
 const { ObjectId } = require('mongoose').Types;
 const { User, Thought } = require('../models');
 
-// TODO: Create an aggregate function to get the number of users overall
-const headCount = async () => {
-  // Your code here
-  const numberOfUsers = await User.aggregate().count();
-  return numberOfUsers;
-}
-
-// Execute the aggregate method on the user model and calculate the overall grade by using the $avg operator
-const grade = async (userId) =>
-  User.aggregate([
-    // TODO: Ensure we include only the user who can match the given ObjectId using the $match operator
-    {
-      $match:{_id: new ObjectId(userId)} 
-      // Your code here
-    },
-    {
-      $unwind: '$assignments',
-    },
-    // TODO: Group information for the user with the given ObjectId alongside an overall grade calculated using the $avg operator
-    {
-      $group:{
-        _id: new ObjectId(userId),
-        grade:{$avg:'$assignments.score'}
-      }
-    },
-  ]);
-
 module.exports = {
   // Get all users
   async getUsers(req, res) {
     try {
       const users = await User.find();
-      const userObj = {
-        users,
-        headCount: await headCount(),
-      };
-      return res.json(userObj);
+      return res.json(users);
     } catch (err) {
       console.log(err);
       return res.status(500).json(err);
@@ -101,46 +70,4 @@ module.exports = {
     }
   },
 
-  // Add an assignment to a user
-  async addAssignment(req, res) {
-    try {
-      console.log('You are adding an assignment');
-      console.log(req.body);
-      const user = await User.findOneAndUpdate(
-        { _id: req.params.userId },
-        { $addToSet: { assignments: req.body } },
-        { runValidators: true, new: true }
-      );
-
-      if (!user) {
-        return res
-          .status(404)
-          .json({ message: 'No user found with that ID :(' })
-      }
-
-      res.json(user);
-    } catch (err) {
-      res.status(500).json(err);
-    }
-  },
-  // Remove assignment from a user
-  async removeAssignment(req, res) {
-    try {
-      const user = await User.findOneAndUpdate(
-        { _id: req.params.userId },
-        { $pull: { assignment: { assignmentId: req.params.assignmentId } } },
-        { runValidators: true, new: true }
-      );
-
-      if (!user) {
-        return res
-          .status(404)
-          .json({ message: 'No user found with that ID :(' });
-      }
-
-      res.json(user);
-    } catch (err) {
-      res.status(500).json(err);
-    }
-  },
 };

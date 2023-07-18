@@ -51,7 +51,7 @@ module.exports = {
     }
   },
   // Update a thought
-  async updatethought(req, res) {
+  async updateThought(req, res) {
     try {
       const thought = await Thought.findOneAndUpdate(
         { _id: req.params.thoughtId },

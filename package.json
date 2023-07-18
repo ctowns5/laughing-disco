@@ -1,14 +1,13 @@
 {
-  "name": "28-Stu_Mini-Project",
+  "name": "laughing-disco",
   "version": "1.0.1",
-  "description": "Mongoose back-end project - Develop",
-  "main": "index.js",
+  "description": "Mongoose back-end project",
+  "main": "server.js",
   "license": "MIT",
   "scripts": {
-    "start": "node index",
-    "dev": "nodemon index",
-    "seed": "node utils/seed",
-    "heroku-postbuild": "node utils/seed.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+
   },
   "dependencies": {
     "express": "^4.17.1",

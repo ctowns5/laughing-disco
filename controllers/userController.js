@@ -19,15 +19,13 @@ module.exports = {
       const user = await User.findOne({ _id: req.params.userId })
         .select('-__v')
         .lean();
+        res.json(user);  
 
       if (!user) {
         return res.status(404).json({ message: 'No user with that ID' });
       }
 
-      res.json({
-        user,
-        grade: await grade(req.params.userId),
-      });
+    
     } catch (err) {
       console.log(err);
       return res.status(500).json(err);
@@ -41,6 +39,20 @@ module.exports = {
     } catch (err) {
       res.status(500).json(err);
     }
+  },
+  // update User by id
+  async updateUser({ params, body }, res) {
+    try {const user = await User.findOneAndUpdate({ _id: params.userId }, body, { new: true, runValidators: true })
+      .then(dbUserData => {
+        if (!dbUserData) {
+          res.status(404).json({ message: 'No User found with this id!' });
+          return;
+        }
+        res.json(dbUserData);
+      })
+    } catch(err) {
+      res.status(500).json(err);
+    };
   },
   // Delete a User and remove them from the thought
   async deleteUser(req, res) {

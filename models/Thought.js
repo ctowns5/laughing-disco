@@ -55,8 +55,6 @@ thoughtSchema.virtual('reactionCount').get(function () {
   return this.reactions.length;
 });
 
-//TODO add virtual get to return reaction count
-
 const thought = model('thought', thoughtSchema);
 
 module.exports = thought;

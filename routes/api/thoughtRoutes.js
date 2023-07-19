@@ -19,11 +19,11 @@ router
   .put(updateThought)
   .delete(deleteThought);
 
-// Post at /api/thoughts/:thoughtId/reactions
+// Post /api/thoughts/:thoughtId/reactions
 router
   .route('/:thoughtId/reactions')
   .post(createReaction);
-
+  
   router
   .route('/:thoughtId/reactions/:reactionId')
   .delete(deleteReaction);  

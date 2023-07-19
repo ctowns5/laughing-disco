@@ -68,6 +68,7 @@ module.exports = {
       res.status(500).json(err);
     }
   },
+  //create a reaction
   createReaction({params, body}, res) {
     Thought.findOneAndUpdate(
       {_id: params.thoughtId}, 
@@ -84,23 +85,21 @@ module.exports = {
     })
     .catch(err => res.status(400).json(err))
 },
-
+//delete a reaction
   deleteReaction({ params }, res) {
     Thought.findOneAndUpdate(
       { _id: params.thoughtId },
-      { $pull: { reactions: { reactionId: params.reactionId } } },
+      { $pull: { thoughts: { reactionId: params.reactionId } } },
       { new: true }
     )
       .then(dbThoughtData => {
         if (!dbThoughtData) {
-          res.status(404).json({ message: 'Nope!'});
+          res.status(404).json({ message: 'No reaction found with this id'});
           return;
         }
       res.json(dbThoughtData);
       })
       .catch(err => res.json(err));
   }
-
-
 };
 
